@@ -40,9 +40,13 @@ jobs:
 
       - name: Run Docker Container
         run: docker run zahidmiisc/cicd:latest
-
+      
       - name: Execute Test Condition
-        run: OUTPUT=$(docker run zahidmiisc/cicd:latest)
-             echo "Score:"
-             echo "$OUTPUT"
-             if [[ `echo "$OUTPUT 0.30" | awk '{print ($1 < $2)}'` == 1 ]]; then echo "Insufficient Accuracy" && exit 1; fi
+        run: |
+          OUTPUT=$(docker run zahidmiisc/cicd:latest)
+          echo "Score:"
+          echo "$OUTPUT"
+          if [[ $(echo "$OUTPUT 0.30" | awk '{print ($1 < $2)}') == 1 ]]; then
+            echo "Insufficient Accuracy"
+            exit 1
+          fi
