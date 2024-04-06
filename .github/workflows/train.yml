@@ -7,7 +7,7 @@ on:
       - 'train.py'
 
 jobs:
-  build_and_push_docker_image:
+  train:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
