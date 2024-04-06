@@ -1,4 +1,4 @@
-name: Test Docker Image
+name: Test Docker
 
 on:
   pull_request:
