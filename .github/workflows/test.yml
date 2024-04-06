@@ -1,22 +1,28 @@
-name: Test
+name: Test Docker Image
 
 on:
   pull_request:
-    branches: [ main ]
-    paths:
-      - 'test.py'
-      - '.github/workflows/train.yml'  # Trigger only if train.yml changes
+    branches: [main]
 
 jobs:
-  run_docker_image_and_test:
+  test:
     runs-on: ubuntu-latest
-    needs: build_and_push_docker_image
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
       - name: Pull Docker Image
-        run: docker pull myusername/myimage:latest
+        run: |
+          docker pull your_docker_image:latest
 
       - name: Run Docker Container
-        run: docker run myusername/myimage:latest python test.py
+        run: |
+          docker run your_docker_image:latest
+
+      - name: Execute Test Script
+        run: |
+          OUTPUT=$(docker run your_docker_image:latest)
+          echo "Score:"
+          echo "$OUTPUT"
+          if [[ `echo "$OUTPUT 0.50" | awk '{print ($1 < $2)}'` == 1 ]]; then echo "Insufficient Accuracy" && exit 1; fi
