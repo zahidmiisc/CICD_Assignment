@@ -1,4 +1,4 @@
-name: Train
+name: Train_Test
 
 on:
   pull_request:
