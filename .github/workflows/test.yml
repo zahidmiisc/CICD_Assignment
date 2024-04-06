@@ -5,16 +5,8 @@ on:
     workflows: ["train"]
     types:
       - completed
-
-jobs:
-  placeholder:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Placeholder Step
-        run: echo "This is a placeholder job"
         
   test:
-    needs: train
     runs-on: ubuntu-latest
 
     steps:
