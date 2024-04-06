@@ -9,20 +9,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout Repo
         uses: actions/checkout@v2
 
       - name: Pull Docker Image
-        run: |
-          docker pull zahidmiisc/myimage:latest
+        run: docker pull zahidmiisc/CICD:latest
 
       - name: Run Docker Container
-        run: |
-          docker run zahidmiisc/myimage:latest
+        run: docker run zahidmiisc/CICD:latest
 
-      - name: Execute Test Script
-        run: |
-          OUTPUT=$(docker run zahidmiisc/myimage:latest)
-          echo "Score:"
-          echo "$OUTPUT"
-          if [[ `echo "$OUTPUT 0.35" | awk '{print ($1 < $2)}'` == 1 ]]; then echo "Insufficient Accuracy" && exit 1; fi
+      - name: Execute Test Condition
+        run: OUTPUT=$(docker run zahidmiisc/CICD:latest)
+             echo "Score:"
+             echo "$OUTPUT"
+             if [[ `echo "$OUTPUT 0.35" | awk '{print ($1 < $2)}'` == 1 ]]; then echo "Insufficient Accuracy" && exit 1; fi
