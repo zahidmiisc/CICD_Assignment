@@ -1,0 +1,52 @@
+name: Train_Test
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'train.py'
+
+jobs:
+  Train:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        run: |
+          docker buildx create --name mybuilder
+          docker buildx use mybuilder
+          docker buildx build --platform linux/amd64,linux/arm64 -t zahidmiisc/cicd:latest --push .
+
+  Test:
+    runs-on: ubuntu-latest
+    needs: Train
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Pull Docker Image
+        run: docker pull zahidmiisc/cicd:latest
+
+      - name: Run Docker Container
+        run: docker run zahidmiisc/cicd:latest
+      
+      - name: Execute Test Condition
+        run: |
+          OUTPUT=$(docker run zahidmiisc/cicd:latest)
+          echo "Score:"
+          echo "$OUTPUT"
+          if [[ $(echo "$OUTPUT 0.35" | awk '{print ($1 < $2)}') == 1 ]]; then
+            echo "Insufficient Accuracy"
+            exit 1
+          fi
