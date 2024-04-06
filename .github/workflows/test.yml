@@ -1,0 +1,22 @@
+name: Test
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'test.py'
+      - '.github/workflows/train.yml'  # Trigger only if train.yml changes
+
+jobs:
+  run_docker_image_and_test:
+    runs-on: ubuntu-latest
+    needs: build_and_push_docker_image
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Pull Docker Image
+        run: docker pull myusername/myimage:latest
+
+      - name: Run Docker Container
+        run: docker run myusername/myimage:latest python test.py
