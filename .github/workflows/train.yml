@@ -10,7 +10,7 @@ jobs:
   build_and_push_docker_image:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
       - name: Set up Docker Buildx
