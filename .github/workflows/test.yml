@@ -6,6 +6,7 @@ on:
 
 jobs:
   test:
+    needs: train
     runs-on: ubuntu-latest
 
     steps:
